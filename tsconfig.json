@@ -4,7 +4,7 @@
         "target": "ES2022",
         "noImplicitAny": false,
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "./dist",
         "baseUrl": ".",
         "esModuleInterop": true,
         "types": ["./src/index.d.ts"],
@@ -12,7 +12,9 @@
             "*": [
                 "node_modules/*"
             ]
-        }
+        },
+        "resolveJsonModule": true
+        
     },
     "include": [
         "src/**/*"

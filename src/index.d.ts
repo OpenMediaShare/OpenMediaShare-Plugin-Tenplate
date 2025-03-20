@@ -1,46 +1,54 @@
+import 'oms-sharedtypes'
 import type electron from 'electron'
 import type { Express } from 'express-serve-static-core'
 import { TypedEventEmitter } from './types';
 interface defaultModules {
     electron: typeof electron
-    store: TypedEventEmitter<LocalEventTypes>
     express: Express
+    Logger: typeof lLogger
+}
+
+interface PluginConfigHelper {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    get: (key: string) => any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    set: (key: string, value: any) => void
+}
+
+export class lLogger {
+    constructor()
+    info (type: string[], text: string): void;
+    dinfo (type: string[], text: string): void;
+    warn (type: string[], text: string): void;
+    dwarn(type: string[], text: string): void;
+    error (type: string[], text: string): void;
+    derror (type: string[], text: string): void;
 }
 
 
-interface VideoMetadata {
-    video: {
-        creator: string;
-        title: string;
-        views?: string;
-        likes?: string;
-        thumbnail: string;
-        url: string;
-    };
-    time: {
-        curruntTime: number;
-        totalTime: number;
-        timePercent: number;
-        formattedTime: string;
-    };
-    extra: {
-        platform: string;
-        uuid: string;
-        browser: string;
-    };
+
+type PluginEvents = {
+    playbackChange: [PlayerState],
+    mediaChange: [VideoMetadata],
+    rawInfoUpdate: [VideoMetadata]
+    rawPlayerStateChange: [PlayerState]
 }
 
-type LocalEventTypes = {
-    videoUpdated: [
-        video: VideoMetadata['video']
-    ],
-    timeUpdated: [
-        time: VideoMetadata['time']
-    ]
-    extraUpdated: [
-        extra: VideoMetadata['extra']
-    ],
-    infoUpdated: [
-        info: VideoMetadata
-    ],
+interface configBuilder {
+    pages: Record<string, {
+        id: string,
+        displayName: string,
+        type: 'checkbox' | 'text' | 'number', //add options here
+        required: boolean,
+        default?: string | boolean | number,
+    }[]>
+}
+
+
+interface Info {
+    name: string,
+    author: string,
+    configBuilder: configBuilder,
+    version?: string,
+    description?: string
 }
